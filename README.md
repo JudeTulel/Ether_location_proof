@@ -1,6 +1,6 @@
-## Proof of Location on Blockchain
+## GPS Based Proof of Location on Blockchain
 ### Overview
-"Location on Chain" is a decentralized system that verifies the location of participants in real-time using blockchain technology. This concept is designed to ensure the accuracy and integrity of location-based services, such as delivery systems and public transportation, by securely logging and verifying the geolocation of users on the blockchain.I also allows for location based activation of smart contracts
+"Delivery on Chain" is a decentralized system that verifies the location of participants in real-time using blockchain technology. This concept is designed to ensure the accuracy and integrity of location-based services, such as delivery systems and public transportation, by securely logging and verifying the geolocation of users on the blockchain.I also allows for location based activation of smart contracts
 
 ### Key Features
 Decentralized Location Verification: Leverages blockchain for immutable and transparent location verification.
