@@ -9,13 +9,24 @@ contract ProofOfLocation {
     uint256 public endLat;
     uint256 public endLon;
     uint256 public maxDistance;
+
     bool public isDeliveryConfirmed;
+    bool public isOrderVerified;
+
+    // Event to be emitted after conditions are met
+    event DeliveryConfirmedAndOrderVerified(
+        address indexed sender,
+        address indexed receiver,
+        string message,
+        bytes32 orderHash
+    );
 
     constructor(address _receiver, uint256 _maxDistance) {
         sender = msg.sender;
         receiver = _receiver;
         maxDistance = _maxDistance;
         isDeliveryConfirmed = false;
+        isOrderVerified = false;
     }
 
     function setStartLocation(uint256 _lat, uint256 _lon) external {
@@ -35,8 +46,21 @@ contract ProofOfLocation {
         isDeliveryConfirmed = true;
     }
 
-    function releasePayment() external {
+    function verifyOrder() external {
+        // Simulate order verification process
+        isOrderVerified = true;
+    }
+
+    function releaseEvent(bytes32 orderHash) external {
         require(isDeliveryConfirmed, "Delivery not confirmed yet");
-        payable(sender).transfer(address(this).balance);
+        require(isOrderVerified, "Order not verified yet");
+
+        // Emit event instead of transferring payment
+        emit DeliveryConfirmedAndOrderVerified(
+            sender,
+            receiver,
+            "Delivery confirmed and order verified",
+            orderHash
+        );
     }
 }
