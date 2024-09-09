@@ -3,7 +3,7 @@
 "Delivery on Chain" is a decentralized system that verifies the location of participants in real-time using blockchain technology. This concept is designed to ensure the accuracy and integrity of location-based services, such as delivery systems and public transportation, by securely logging and verifying the geolocation of users on the blockchain.I also allows for location based activation of smart contracts
 
 ### Key Features
-Decentralized Location Verification: Leverages blockchain for immutable and transparent location verification.
+Decentralized Location Verification: Leverages blockchain(LISK) for immutable and transparent location verification.
 Off-Chain Distance Calculation: Efficiently handles complex geolocation calculations off-chain and submits verified results to the blockchain.
 Automated Smart Contracts: Facilitates automatic contract execution and payment release based on verified location data.
 Secure and Transparent: Ensures data integrity and transparency, minimizing fraud and disputes.
