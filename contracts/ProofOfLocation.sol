@@ -47,7 +47,7 @@ contract ProofOfLocation {
     }
 
     function verifyOrder() external {
-        // Simulate order verification process
+        //ToDo Simulate order verification process
         isOrderVerified = true;
     }
 
@@ -55,7 +55,7 @@ contract ProofOfLocation {
         require(isDeliveryConfirmed, "Delivery not confirmed yet");
         require(isOrderVerified, "Order not verified yet");
 
-        // Emit event instead of transferring payment
+        // Emit event 
         emit DeliveryConfirmedAndOrderVerified(
             sender,
             receiver,
