@@ -1,0 +1,39 @@
+.user-choice {
+    text-align: center;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+  }
+  
+  h1 {
+    margin-bottom: 10px;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  .image-container {
+    flex: 1; /* Adjust the flex value as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .role-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .role-button:hover {
+    background-color: #0069d9;
+  }
