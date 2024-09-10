@@ -7,8 +7,8 @@
 **Decentralized Location Verification**: Leverages blockchain for immutable and transparent location verification. Off-Chain Distance Calculation: Efficiently handles complex geolocation calculations off-chain and submits verified results to the blockchain. Automated Smart Contracts: Facilitates automatic contract execution and payment release based on verified location data. Secure and Transparent: Ensures data integrity and transparency, minimizing fraud and disputes.
 How It Works
 
-**Start Location**: The sender initiates the process by setting their starting location. DeliveryMedium: the delivery person or vehicle
-**End Location**: The receiver sets the delivery or endpoint location after the transaction is completed. Off-Chain Calculation: A backend service calculates the distance between the deliveryMedium and endLocation. Oracle Integration: The calculated distance is sent to the smart contract using an oracle. Validation: The smart contract verifies whether the distance is within the acceptable range. Payment Release: If the distance is validated, the payment is automatically released to the relevant parties.
+**Start Location**: The sender initiates the process by setting their starting location. DeliveryMedium: the delivery person or vehicle reaches the pickup point and takes up the delivery contract and the sender signs it and adds the adress of the courier to the contract.
+**End Location**: The receiver sets the delivery or endpoint location . The courier makes the claim that the delivery is complete and this is verified by an Off-Chain Calculation: A chainlink oracle calculates the distance between the deliveryMedium and endLocation. Oracle Integration: The calculated distance is sent to the smart contract using an oracle. Validation: The smart contract verifies whether the distance is within the acceptable range. Payment Release: If the distance is validated, the payment is automatically released to the relevant parties.
 
 ## Example Use Case
 
