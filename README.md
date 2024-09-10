@@ -9,9 +9,10 @@ How It Works
 
 **Start Location**: The sender initiates the process by setting their starting location. DeliveryMedium: the delivery person or vehicle
 **End Location**: The receiver sets the delivery or endpoint location after the transaction is completed. Off-Chain Calculation: A backend service calculates the distance between the deliveryMedium and endLocation. Oracle Integration: The calculated distance is sent to the smart contract using an oracle. Validation: The smart contract verifies whether the distance is within the acceptable range. Payment Release: If the distance is validated, the payment is automatically released to the relevant parties.
-Example Use Case
 
-## Delivery Apps In the logistics and delivery sector
+## Example Use Case
+
+### Delivery Apps In the logistics and delivery sector
 - Ensuring that goods are delivered to the correct location is paramount. This Proof of Location system can be integrated into delivery apps to:
 
 - Verify Deliveries: Ensure that packages are delivered to the correct address by validating the proximity of the delivery personnel to the recipient. Automate Payments: Release payments to delivery personnel only when the delivery is confirmed through verified geolocation data. Enhance Trust: Provide transparency to customers and businesses by recording delivery events on the blockchain.
