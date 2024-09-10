@@ -16,6 +16,8 @@ How It Works
 - Ensuring that goods are delivered to the correct location is paramount. This Proof of Location system can be integrated into delivery apps to:
 
 - Verify Deliveries: Ensure that packages are delivered to the correct address by validating the proximity of the delivery personnel to the recipient. Automate Payments: Release payments to delivery personnel only when the delivery is confirmed through verified geolocation data. Enhance Trust: Provide transparency to customers and businesses by recording delivery events on the blockchain.
+## EDIT
+The contract is deployed on lisk testnet here is the address [**0x2bd08ee606ccb8f74bd3770e04c5c2f2de17e25b**](https://sepolia-blockscout.lisk.com/address/0x2bd08ee606ccb8f74bd3770e04c5c2f2de17e25b)
 # Setup on your computer
 
 ## Foundry
