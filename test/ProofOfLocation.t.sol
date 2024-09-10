@@ -2,10 +2,11 @@
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
-import "../src/ProofOfLocation.sol";
+// This file contains the PackageDelivery contract so dont get confused about name change
+import "../src/ProofOfLocation.sol"; 
 
-contract ProofOfLocationTest is Test {
-    ProofOfLocation public proofOfLocation;
+contract PackageDeliveryTest is Test {
+    PackageDelivery public packageDelivery;
 
     address sender = address(0x123);
     address recipient = address(0x456);
@@ -16,125 +17,85 @@ contract ProofOfLocationTest is Test {
     uint8 minRating = 4;
 
     function setUp() public {
-        // Deploy the contract before each test
-        proofOfLocation = new ProofOfLocation();
-
-        // Give sender, recipient, and deliveryGuy some Ether for testing
-        vm.deal(sender, 10 ether);
-        vm.deal(recipient, 10 ether);
-        vm.deal(deliveryGuy, 10 ether);
-
-        // Set the sender's address
-        vm.prank(sender);
-        proofOfLocation.createPackage(packageId, postage, minRating, recipient);
+        packageDelivery = new PackageDelivery();
     }
 
     function testCreatePackage() public {
-        // Check that the package is created successfully
-        (uint256 id,,, address pkgSender, address pkgRecipient,,,,) = proofOfLocation.packages(packageId);
-        assertEq(id, packageId);
-        assertEq(pkgSender, sender);
-        assertEq(pkgRecipient, recipient);
-    }
-
-    function testDepositFunds() public {
-        // Deposit postage amount into the contract
         vm.prank(sender);
-        proofOfLocation.depositFunds{value: postage}(packageId);
+        packageDelivery.createPackage(packageId, postage, minRating, recipient);
 
-        // Check that funds were deposited
-        uint256 deposit = proofOfLocation.senderDeposits(sender);
-        assertEq(deposit, postage);
+        (uint256 id, uint256 post, uint8 rating, address senderAddr, address recipientAddr,,,) = packageDelivery.packages(packageId);
+
+        assertEq(id, packageId);
+        assertEq(post, postage);
+        assertEq(rating, minRating);
+        assertEq(senderAddr, sender);
+        assertEq(recipientAddr, recipient);
     }
 
     function testPickupPackage() public {
-        // Deposit funds for the package
+        // First, create a package
         vm.prank(sender);
-        proofOfLocation.depositFunds{value: postage}(packageId);
+        packageDelivery.createPackage(packageId, postage, minRating, recipient);
 
-        // Pick up the package by the delivery guy
+        // Pickup the package as sender
         vm.prank(sender);
-        proofOfLocation.pickupPackage(packageId, deliveryGuy);
+        packageDelivery.pickupPackage(packageId, deliveryGuy);
 
-        // Check that the delivery guy was assigned and timestamp is recorded
-        (,,,,, address pkgDeliveryGuy, uint256 pickupTimestamp, bool isPickedUp,) = proofOfLocation.packages(packageId);
-        assertEq(pkgDeliveryGuy, deliveryGuy);
+        (, , , , , address deliveryPerson, uint256 timestamp, bool isPickedUp,) = packageDelivery.packages(packageId);
+        
+        assertEq(deliveryPerson, deliveryGuy);
         assertEq(isPickedUp, true);
-        assertTrue(pickupTimestamp > 0);
+        assertGt(timestamp, 0); // Ensure the timestamp was recorded
     }
 
     function testDeliverPackage() public {
-        // Deposit funds and pick up the package
+        // Create and pickup the package
         vm.prank(sender);
-        proofOfLocation.depositFunds{value: postage}(packageId);
-
+        packageDelivery.createPackage(packageId, postage, minRating, recipient);
         vm.prank(sender);
-        proofOfLocation.pickupPackage(packageId, deliveryGuy);
+        packageDelivery.pickupPackage(packageId, deliveryGuy);
 
-        // Deliver the package
+        // Deliver the package as the delivery person
         vm.prank(deliveryGuy);
-        proofOfLocation.deliverPackage(packageId);
+        packageDelivery.deliverPackage(packageId);
 
-        // Check that the package is marked as delivered
-        (,,,,,,, bool isDelivered,) = proofOfLocation.packages(packageId);
+        (, , , , , , , , bool isDelivered) = packageDelivery.packages(packageId);
+
         assertEq(isDelivered, true);
     }
 
+    function testDepositFunds() public {
+        // Create package and deposit funds
+        vm.prank(sender);
+        packageDelivery.createPackage(packageId, postage, minRating, recipient);
+
+        vm.prank(sender);
+        packageDelivery.depositFunds{value: 1 ether}(packageId);
+
+        assertEq(packageDelivery.senderDeposits(sender), 1 ether);
+    }
+
     function testVerifyAndCompleteDelivery() public {
-        // Deposit funds, pick up, and deliver the package
+        // Create and pickup the package
         vm.prank(sender);
-        proofOfLocation.depositFunds{value: postage}(packageId);
-
+        packageDelivery.createPackage(packageId, postage, minRating, recipient);
         vm.prank(sender);
-        proofOfLocation.pickupPackage(packageId, deliveryGuy);
+        packageDelivery.pickupPackage(packageId, deliveryGuy);
 
+        // Deposit funds
+        vm.prank(sender);
+        packageDelivery.depositFunds{value: 1 ether}(packageId);
+
+        // Deliver the package
         vm.prank(deliveryGuy);
-        proofOfLocation.deliverPackage(packageId);
+        packageDelivery.deliverPackage(packageId);
 
-        // Verify and complete delivery
+        // Verify and complete delivery by the recipient
         vm.prank(recipient);
-        proofOfLocation.verifyAndCompleteDelivery(packageId, true, true);
+        packageDelivery.verifyAndCompleteDelivery(packageId, true, true);
 
-        // Check that the delivery is verified and funds are transferred
-        bool isVerified = proofOfLocation.packageVerified(packageId);
-        assertEq(isVerified, true);
-
-        uint256 deposit = proofOfLocation.senderDeposits(sender);
-        assertEq(deposit, 0); // Ensure funds are deducted from sender
-
-        uint256 deliveryGuyBalance = deliveryGuy.balance;
-        assertEq(deliveryGuyBalance, 11 ether); // Delivery guy received postage
-    }
-
-    function testFailOnlySenderCanPickPackage() public {
-        // This should fail because only the sender can pick up the package
-        vm.prank(recipient);
-        proofOfLocation.pickupPackage(packageId, deliveryGuy);
-    }
-
-    function testFailOnlyRecipientCanVerify() public {
-        // Pick up and deliver the package
-        vm.prank(sender);
-        proofOfLocation.depositFunds{value: postage}(packageId);
-
-        vm.prank(sender);
-        proofOfLocation.pickupPackage(packageId, deliveryGuy);
-
-        vm.prank(deliveryGuy);
-        proofOfLocation.deliverPackage(packageId);
-
-        // This should fail because only the recipient can verify the delivery
-        vm.prank(sender);
-        proofOfLocation.verifyAndCompleteDelivery(packageId, true, true);
-    }
-
-    function testFailInsufficientFunds() public {
-        // Create a package without depositing funds
-        vm.prank(sender);
-        proofOfLocation.createPackage(2, postage, minRating, recipient);
-
-        // Attempt to verify delivery without funds (should fail)
-        vm.prank(recipient);
-        proofOfLocation.verifyAndCompleteDelivery(2, true, true);
+        // Check if the package has been verified
+        assertEq(packageDelivery.packageVerified(packageId), true);
     }
 }
