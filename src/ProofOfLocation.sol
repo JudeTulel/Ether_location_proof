@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 contract PackageDelivery {
-
     struct Package {
         uint256 packageId;
         uint256 postage;
@@ -17,7 +16,7 @@ contract PackageDelivery {
 
     mapping(uint256 => Package) public packages;
     mapping(uint256 => bool) public packageVerified;
-    
+
     // To keep track of funds deposited by senders
     mapping(address => uint256) public senderDeposits;
 
@@ -73,7 +72,11 @@ contract PackageDelivery {
     }
 
     // Delivery person picks up the package
-    function pickupPackage(uint256 packageId, address deliveryGuy) external onlySender(packageId) packageExists(packageId) {
+    function pickupPackage(uint256 packageId, address deliveryGuy)
+        external
+        onlySender(packageId)
+        packageExists(packageId)
+    {
         require(!packages[packageId].isPickedUp, "Package already picked up");
 
         packages[packageId].deliveryGuy = deliveryGuy;
@@ -103,20 +106,18 @@ contract PackageDelivery {
 
         // If all conditions are met, complete the transaction and release funds
         packageVerified[packageId] = true;
-        
+
         uint256 postage = packages[packageId].postage;
         address deliveryGuy = packages[packageId].deliveryGuy;
         address sender = packages[packageId].sender;
-        
+
         // Release funds to the delivery person
         require(senderDeposits[sender] >= postage, "Insufficient funds in contract");
         payable(deliveryGuy).transfer(postage);
         senderDeposits[sender] -= postage;
-        
-       
+
         emit FundsTransferred(deliveryGuy, postage);
     }
-
 
     receive() external payable {
         // Allow the contract to receive Ether
