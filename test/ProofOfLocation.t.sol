@@ -82,27 +82,24 @@ contract PackageDeliveryTest is Test {
     }
 
     function testDepositFunds() public {
-        // Deposit ether to the contract
-        vm.deal(sender, 2 ether); // Ensure the sender has enough funds
+        // Ensure sender has enough funds
+        vm.deal(sender, 2 ether);
         vm.prank(sender);
         packageDelivery.depositFunds{value: 1 ether}(packageId);
 
+        // Check deposit
         assertEq(packageDelivery.senderDeposits(sender), 1 ether);
     }
 
     function testVerifyAndCompleteDelivery() public {
-        // Ensure contract and sender have enough ether
-        vm.deal(sender, 2 ether); // Ensure the sender has enough funds
-        vm.prank(sender);
-        packageDelivery.depositFunds{value: 1 ether}(packageId);
-
-        // Create and pickup the package
+        // Ensure sender and contract have enough ether
+        vm.deal(sender, 2 ether); // Ensure sender has enough funds
         vm.prank(sender);
         packageDelivery.createPackage(packageId, postage, minRating, recipient);
         vm.prank(sender);
         packageDelivery.pickupPackage(packageId, deliveryGuy);
 
-        // Deposit funds
+        // Deposit funds as sender
         vm.prank(sender);
         packageDelivery.depositFunds{value: 1 ether}(packageId);
 
