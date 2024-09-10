@@ -18,7 +18,7 @@ contract ProofOfLocationTest is Test {
     function setUp() public {
         // Deploy the contract before each test
         proofOfLocation = new ProofOfLocation();
-        
+
         // Give sender, recipient, and deliveryGuy some Ether for testing
         vm.deal(sender, 10 ether);
         vm.deal(recipient, 10 ether);
@@ -31,7 +31,7 @@ contract ProofOfLocationTest is Test {
 
     function testCreatePackage() public {
         // Check that the package is created successfully
-        (uint256 id, , , address pkgSender, address pkgRecipient, , , ,) = proofOfLocation.packages(packageId);
+        (uint256 id,,, address pkgSender, address pkgRecipient,,,,) = proofOfLocation.packages(packageId);
         assertEq(id, packageId);
         assertEq(pkgSender, sender);
         assertEq(pkgRecipient, recipient);
@@ -57,7 +57,7 @@ contract ProofOfLocationTest is Test {
         proofOfLocation.pickupPackage(packageId, deliveryGuy);
 
         // Check that the delivery guy was assigned and timestamp is recorded
-        (, , , , , address pkgDeliveryGuy, uint256 pickupTimestamp, bool isPickedUp,) = proofOfLocation.packages(packageId);
+        (,,,,, address pkgDeliveryGuy, uint256 pickupTimestamp, bool isPickedUp,) = proofOfLocation.packages(packageId);
         assertEq(pkgDeliveryGuy, deliveryGuy);
         assertEq(isPickedUp, true);
         assertTrue(pickupTimestamp > 0);
@@ -76,7 +76,7 @@ contract ProofOfLocationTest is Test {
         proofOfLocation.deliverPackage(packageId);
 
         // Check that the package is marked as delivered
-        (, , , , , , , bool isDelivered,) = proofOfLocation.packages(packageId);
+        (,,,,,,, bool isDelivered,) = proofOfLocation.packages(packageId);
         assertEq(isDelivered, true);
     }
 
