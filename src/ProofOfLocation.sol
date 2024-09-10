@@ -45,12 +45,13 @@ contract PackageDelivery {
     }
 
     // Deposit funds into the contract for a specific package
-    function depositFunds(uint256 packageId) external payable onlySender(packageId) packageExists(packageId) {
-        require(msg.value >= packages[packageId].postage, "Insufficient funds deposited");
+   function depositFunds(uint256 _packageId) external payable {
+    Package storage package = packages[_packageId];
+    require(msg.sender == package.sender, "Only the sender can perform this action");
+    require(msg.value == package.postage, "Incorrect amount");
+    senderDeposits[msg.sender] += msg.value;
+}
 
-        senderDeposits[msg.sender] += msg.value;
-        emit FundsDeposited(msg.sender, msg.value);
-    }
 
     // Create a new package order
     function createPackage(uint256 packageId, uint256 postage, uint8 minRating, address recipient) external {
