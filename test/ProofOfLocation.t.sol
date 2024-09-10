@@ -79,8 +79,10 @@ contract PackageDeliveryTest is Test {
     }
 
     function testDepositFunds() public {
-        // Create package and deposit
-        address(packageDelivery).transfer(2 ether);
+        // Deposit ether to the contract
+        payable(address(packageDelivery)).transfer(2 ether);
+
+        // Create package and deposit funds
         vm.prank(sender);
         packageDelivery.createPackage(packageId, postage, minRating, recipient);
 
@@ -91,8 +93,10 @@ contract PackageDeliveryTest is Test {
     }
 
     function testVerifyAndCompleteDelivery() public {
+        // Deposit ether to the contract
+        payable(address(packageDelivery)).transfer(2 ether);
+
         // Create and pickup the package
-        address(packageDelivery).transfer(2 ether);
         vm.prank(sender);
         packageDelivery.createPackage(packageId, postage, minRating, recipient);
         vm.prank(sender);
