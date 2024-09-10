@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
 // This file contains the PackageDelivery contract so dont get confused about name change
-import "../src/ProofOfLocation.sol"; 
+import "../src/ProofOfLocation.sol";
 
 contract PackageDeliveryTest is Test {
     PackageDelivery public packageDelivery;
@@ -24,7 +24,8 @@ contract PackageDeliveryTest is Test {
         vm.prank(sender);
         packageDelivery.createPackage(packageId, postage, minRating, recipient);
 
-        (uint256 id, uint256 post, uint8 rating, address senderAddr, address recipientAddr,,,) = packageDelivery.packages(packageId);
+        (uint256 id, uint256 post, uint8 rating, address senderAddr, address recipientAddr,,,) =
+            packageDelivery.packages(packageId);
 
         assertEq(id, packageId);
         assertEq(post, postage);
@@ -42,8 +43,8 @@ contract PackageDeliveryTest is Test {
         vm.prank(sender);
         packageDelivery.pickupPackage(packageId, deliveryGuy);
 
-        (, , , , , address deliveryPerson, uint256 timestamp, bool isPickedUp,) = packageDelivery.packages(packageId);
-        
+        (,,,,, address deliveryPerson, uint256 timestamp, bool isPickedUp,) = packageDelivery.packages(packageId);
+
         assertEq(deliveryPerson, deliveryGuy);
         assertEq(isPickedUp, true);
         assertGt(timestamp, 0); // Ensure the timestamp was recorded
@@ -60,7 +61,7 @@ contract PackageDeliveryTest is Test {
         vm.prank(deliveryGuy);
         packageDelivery.deliverPackage(packageId);
 
-        (, , , , , , , , bool isDelivered) = packageDelivery.packages(packageId);
+        (,,,,,,,, bool isDelivered) = packageDelivery.packages(packageId);
 
         assertEq(isDelivered, true);
     }
